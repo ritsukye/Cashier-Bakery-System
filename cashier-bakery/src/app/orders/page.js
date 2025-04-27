@@ -1,24 +1,21 @@
-// app/bakery-items/page.js bakery listing
 'use client';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import './orders.css';
 import Image from 'next/image';
-import './page.css';
 
-
-
-export default function BakeryItemsPage() {
+export default function OrdersPage() {
   const [items, setItems] = useState([]);
 
   //dummy data, list sql stuff later
   useEffect(() => {
     //simulate data fetch, but later acc fetch from msyql
-    const dummyData = [
-      { id: 1, name: 'Croissant', price: 3.5, imglink: "./images/test.jpeg" },
-      { id: 2, name: 'Baguette', price: 2.75, imglink: "./images/cake.png" },
-      { id: 3, name: 'Muffin', price: 2, imglink: "./images/test.jpeg"},
-      { id: 4, name: 'Sourdough Bread', price: 5, imglink: "./images/test.jpeg"}
+    const dummyOrderData = [
+      { OrderID: 1, CustomerID: 101, EmployeeID: 301, DatePlaced: "2025-04-26", TotalPrice: 17.50 },
+      { OrderID: 2, CustomerID: 102, EmployeeID: 302, DatePlaced: "2012-03-02", TotalPrice: 13.50 },
+      { OrderID: 3, CustomerID: 103, EmployeeID: 303, DatePlaced: "2019-02-26", TotalPrice: 11.50 },
     ];
-    setItems(dummyData);
+    setItems(dummyOrderData);
   }, []);
 
   return (
@@ -47,21 +44,24 @@ export default function BakeryItemsPage() {
       <div className="menu">
 
         {items.map(item => (
-          <div key= {item.id} className = "baked-good">
+          <div key= {item.OrderID} className = "order">
 
           {/* <Image
             src= {`imglink`}
             width={200}
             height={200}
             alt="Picture of the logo"/> */}
-              <img
+              {/* <img
                 key={item.id}
                 src={item.imglink}
-                style={{ width: 200, height: 200 }}
-              />
+                style={{ width: 20, height: 20}}
+              /> */}
 
-            <p>{item.name}</p>
-            <p>${item.price.toFixed(2)}</p>
+            <p>Order #{item.OrderID}</p>
+            <p>Customer #{item.CustomerID}</p>
+            <p>Employee #{item.EmployeeID}</p>
+            <p>Date Placed: {item.DatePlaced}</p>
+            <p>Order Total: ${item.TotalPrice}</p>
 
           </div>
         ))}
@@ -72,6 +72,8 @@ export default function BakeryItemsPage() {
     </main>
   );
 }
+
+
 
 
 
