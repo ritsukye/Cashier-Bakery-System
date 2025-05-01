@@ -32,10 +32,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/Bakery";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "bakery2025";
 
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -48,27 +49,27 @@ public class DatabaseConnection {
             conn = getConnection();
             System.out.println("Connected to database successfully!");
 
-            // Insert data into Orders table
-            String insertQuery = "INSERT INTO Orders (order_id, product_id, customer_id, quantity, data_place, total_price) VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
-                stmt.setInt(1, 1001);  // Order ID
-                stmt.setInt(2, 101);  // Product ID
-                stmt.setInt(3, 1);  // Customer ID
-                stmt.setInt(4, 3);  // Quantity
-                stmt.setDate(5, java.sql.Date.valueOf("2025-04-25"));  // Order date
-                stmt.setInt(6, 60);  // Total price
-                int rowsAffected = stmt.executeUpdate();
-                System.out.println("Inserted " + rowsAffected + " row(s) into the Orders table.");
-            }
+            // // Insert data into Orders table
+            // String insertQuery = "INSERT INTO Orders (order_id, product_id, customer_id, quantity, data_place, total_price) VALUES (?, ?, ?, ?, ?, ?)";
+            // try (PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
+            //     stmt.setInt(1, 1001);  // Order ID
+            //     stmt.setInt(2, 101);  // Product ID
+            //     stmt.setInt(3, 1);  // Customer ID
+            //     stmt.setInt(4, 3);  // Quantity
+            //     stmt.setDate(5, java.sql.Date.valueOf("2025-04-25"));  // Order date
+            //     stmt.setInt(6, 60);  // Total price
+            //     int rowsAffected = stmt.executeUpdate();
+            //     System.out.println("Inserted " + rowsAffected + " row(s) into the Orders table.");
+            // }
 
-           String insertProduct = "INSERT INTO Product (product_id, inventory, price) VALUES (?, ?, ?)";
-           try (PreparedStatement stmt = conn.prepareStatement(insertProduct)) {
-            stmt.setInt(1, 1234); // Product ID
-            stmt.setInt(2, 2);    // Inventory
-            stmt.setInt(3, 50);   // Price
+           String insertCustomers = "INSERT INTO Customers (customerID, Name) VALUES (?, ?)";
+           try (PreparedStatement stmt = conn.prepareStatement(insertCustomers)) {
+            stmt.setInt(1, 45);    // customer's id 
+            stmt.setString(2, "Pedro"); // Customer's name 
+            //stmt.setInt(3, 50);   // order's id
             
             int rowsAffected = stmt.executeUpdate();
-            System.out.println("Inserted " + rowsAffected + " row(s) into the Product table.");
+            System.out.println("Inserted " + rowsAffected + " row(s) into the Customers table.");
 }
 
 
