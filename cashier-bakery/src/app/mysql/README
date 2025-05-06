@@ -49,5 +49,5 @@ install MySQL workbench
 username = "root" 
 password = ""
 
-1. javac DatabaseConnection.java
-2. java -cp ".:mysql-connector-j-9.3.0.jar" DatabaseConnection
+1. javac MainPage.java
+2. java -cp ".:mysql-connector-j-9.3.0.jar" MainPage
