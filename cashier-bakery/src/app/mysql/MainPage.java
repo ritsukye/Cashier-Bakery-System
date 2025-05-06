@@ -2,7 +2,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainPage{
+public class MainPage {
+
     public static void main(String[] args) {
         // Create the main JFrame
         JFrame frame = new JFrame("Bakery System - Main Page");
@@ -37,15 +38,16 @@ public class MainPage{
         employeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DatabaseConnection.main(null); // Call the existing Employee form
+                // Placeholder for employee logic
+                JOptionPane.showMessageDialog(null, "Employee page is under construction.");
             }
         });
 
         managerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Replace with Manager logic
-                JOptionPane.showMessageDialog(null, "Manager page coming soon!");
+                // Call the showManagerPage method from ManagerPage
+                ManagerPage.showManagerPage();
             }
         });
     }

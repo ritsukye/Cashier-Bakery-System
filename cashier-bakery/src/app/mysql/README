@@ -37,3 +37,17 @@ Notice:
   automatic dependency resolution features, by adding a dependency to
   "GroupId: io.opentelemetry" and the corresponding artifacts to your project's
   pom.xml file.
+
+
+
+Extensions 
+install database client JDBC 
+install MySQl 
+install java & JDK 
+
+install MySQL workbench 
+username = "root" 
+password = ""
+
+1. javac DatabaseConnection.java
+2. java -cp ".:mysql-connector-j-9.3.0.jar" DatabaseConnection
