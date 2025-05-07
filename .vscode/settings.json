@@ -1,4 +1,22 @@
 {
-    "sqltools.connections": [],
-    "liveServer.settings.port": 5501
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "BakeryConnection",
+            "database": "BakerySystem",
+            "username": "root"
+        }
+    ],
+    "liveServer.settings.port": 5501,
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/joyceliu/Downloads/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar"
+    ]
 }
