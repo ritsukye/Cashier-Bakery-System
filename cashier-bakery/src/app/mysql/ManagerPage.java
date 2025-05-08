@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -10,22 +9,15 @@ public class ManagerPage {
     private static final String USER = "root";
     private static final String PASSWORD = "bakery2025";
 
-    // Static method to show the manager page
+    public static void main(String[] args) {
+        showManagerPage();
+    }
+
     public static void showManagerPage() {
         JFrame frame = new JFrame("Manager Page");
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel panel = new JPanel(null); // required for absolute positioning
-        placeComponents(panel);
-        frame.add(panel);
-        frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Manager Page");
-        frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel panel = new JPanel(null); // required for absolute positioning
+        JPanel panel = new JPanel(null);
         placeComponents(panel);
         frame.add(panel);
         frame.setVisible(true);
@@ -53,46 +45,39 @@ public class ManagerPage {
         viewEmployeesBtn.setBounds(200, 80, 130, 30);
         panel.add(viewEmployeesBtn);
 
-        JButton viewOdersBtn = new JButton("View Orders"); 
-        viewOdersBtn.setBounds(200, 130, 130, 30);
-        panel.add(viewOdersBtn); 
+        JButton viewOrdersBtn = new JButton("View Orders");
+        viewOrdersBtn.setBounds(200, 130, 130, 30);
+        panel.add(viewOrdersBtn);
 
-
-
-        addProductBtn.addActionListener(e -> addProduct());
-        addEmployeeBtn.addActionListener(e -> addEmployee());
-        viewProductsBtn.addActionListener(e -> openProductTable());
-        viewEmployeesBtn.addActionListener(e -> openEmployeeTable());
-        viewOdersBtn.addActionListener(e-> openOrderTable()); 
-
-
-        // go back to the main page 
         JButton backButton = new JButton("Back to Main Page");
         backButton.setBounds(50, 130, 130, 30);
         panel.add(backButton);
-        // back to main 
+
+        addProductBtn.addActionListener(e -> addProduct());
+        addEmployeeBtn.addActionListener(e -> addEmployee());
+        viewProductsBtn.addActionListener(e -> openTable("Product"));
+        viewEmployeesBtn.addActionListener(e -> openTable("Employees"));
+        viewOrdersBtn.addActionListener(e -> openTable("Orders"));
+
         backButton.addActionListener(e -> {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-            topFrame.dispose(); // Close the current ManagerPage window
-            MainPage.main(null); // Reopen the MainPage
+            topFrame.dispose();
+            MainPage.main(null); // Assuming MainPage exists
         });
     }
 
     private static void addProduct() {
         JFrame frame = new JFrame("Add Product");
-        frame.setSize(300, 300);
-        JPanel panel = new JPanel(new GridLayout(5, 2));
+        frame.setSize(300, 250);
+        JPanel panel = new JPanel(new GridLayout(4, 2));
 
         JTextField idField = new JTextField();
-        JTextField nameField = new JTextField();
         JTextField inventoryField = new JTextField();
         JTextField priceField = new JTextField();
         JButton save = new JButton("Save");
 
         panel.add(new JLabel("Product ID:"));
         panel.add(idField);
-        panel.add(new JLabel("Name:"));
-        panel.add(nameField);
         panel.add(new JLabel("Inventory:"));
         panel.add(inventoryField);
         panel.add(new JLabel("Price:"));
@@ -104,12 +89,11 @@ public class ManagerPage {
 
         save.addActionListener(e -> {
             try (Connection conn = getConnection()) {
-                String sql = "INSERT INTO Products (ProductID, Name, Inventory, Price) VALUES (?, ?, ?, ?)";
+                String sql = "INSERT INTO Product (product_id, inventory, price) VALUES (?, ?, ?)";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, Integer.parseInt(idField.getText().trim()));
-                stmt.setString(2, nameField.getText().trim());
-                stmt.setInt(3, Integer.parseInt(inventoryField.getText().trim()));
-                stmt.setDouble(4, Double.parseDouble(priceField.getText().trim()));
+                stmt.setInt(2, Integer.parseInt(inventoryField.getText().trim()));
+                stmt.setInt(3, Integer.parseInt(priceField.getText().trim()));
                 stmt.executeUpdate();
                 JOptionPane.showMessageDialog(frame, "Product added!");
                 frame.dispose();
@@ -148,7 +132,7 @@ public class ManagerPage {
 
         save.addActionListener(e -> {
             try (Connection conn = getConnection()) {
-                String sql = "INSERT INTO Employees (EmployeeID, Name, PhoneNumber, Email, HireDate) VALUES (?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO Employees (employee_id, name, phone_number, email, hire_date) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, Integer.parseInt(idField.getText().trim()));
                 stmt.setString(2, nameField.getText().trim());
@@ -164,24 +148,18 @@ public class ManagerPage {
         });
     }
 
-    private static void openProductTable() {
-        openTable("Products");
-    }
-
-    private static void openEmployeeTable() {
-        openTable("Employees");
-    }
-
-    private static void openOrderTable(){
-        openTable("Orders");
-    }
-
     private static void openTable(String type) {
         JFrame frame = new JFrame("View " + type);
         frame.setSize(600, 400);
         JPanel panel = new JPanel(new BorderLayout());
 
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0; // allow editing except ID
+            }
+        };
+
         JTable table = new JTable(model);
 
         try (Connection conn = getConnection()) {
@@ -205,71 +183,66 @@ public class ManagerPage {
             JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
         }
 
-        JButton delete = new JButton("Delete");
+        JScrollPane scroll = new JScrollPane(table);
+        panel.add(scroll, BorderLayout.CENTER);
+
+        JPanel buttons = new JPanel();
         JButton update = new JButton("Update");
-
-        JPanel btnPanel = new JPanel();
-        btnPanel.add(delete);
-        btnPanel.add(update);
-
-        panel.add(new JScrollPane(table), BorderLayout.CENTER);
-        panel.add(btnPanel, BorderLayout.SOUTH);
+        JButton delete = new JButton("Delete");
+        buttons.add(update);
+        buttons.add(delete);
+        panel.add(buttons, BorderLayout.SOUTH);
 
         delete.addActionListener(e -> {
             int row = table.getSelectedRow();
-            if (row >= 0) {
-                String id = table.getValueAt(row, 0).toString();
-                try (Connection conn = getConnection()) {
-                    String sql = "DELETE FROM " + type + " WHERE " + type + "ID = ?";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setInt(1, Integer.parseInt(id));
-                    stmt.executeUpdate();
-                    model.removeRow(row);
-                    JOptionPane.showMessageDialog(frame, type + " deleted!");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
-                }
+            if (row == -1) return;
+            String id = table.getValueAt(row, 0).toString();
+            try (Connection conn = getConnection()) {
+                String key = switch (type) {
+                    case "Product" -> "product_id";
+                    case "Employees" -> "employee_id";
+                    default -> "order_id";
+                };
+                String sql = "DELETE FROM " + type + " WHERE " + key + " = ?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, id);
+                stmt.executeUpdate();
+                ((DefaultTableModel) table.getModel()).removeRow(row);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
             }
         });
 
         update.addActionListener(e -> {
             int row = table.getSelectedRow();
-            if (row >= 0) {
-                try (Connection conn = getConnection()) {
-                    String id = table.getValueAt(row, 0).toString();
-                    String sql;
-
-                    if (type.equals("Products")) {
-                        sql = "UPDATE Products SET Name=?, Inventory=?, Price=? WHERE ProductID=?";
-                        PreparedStatement stmt = conn.prepareStatement(sql);
-                        stmt.setString(1, table.getValueAt(row, 1).toString().trim());
-                        stmt.setInt(2, Integer.parseInt(table.getValueAt(row, 2).toString().trim()));
-                        stmt.setDouble(3, Double.parseDouble(table.getValueAt(row, 3).toString().trim()));
-                        stmt.setInt(4, Integer.parseInt(id));
-                        stmt.executeUpdate();
-                    } else {
-                        sql = "UPDATE Employees SET Name=?, PhoneNumber=?, Email=?, HireDate=? WHERE EmployeeID=?";
-                        PreparedStatement stmt = conn.prepareStatement(sql);
-                        stmt.setString(1, table.getValueAt(row, 1).toString().trim());
-                        stmt.setString(2, table.getValueAt(row, 2).toString().trim());
-                        stmt.setString(3, table.getValueAt(row, 3).toString().trim());
-                        stmt.setString(4, table.getValueAt(row, 4).toString().trim());
-                        stmt.setInt(5, Integer.parseInt(id));
-                        stmt.executeUpdate();
-                    }
-
-                    JOptionPane.showMessageDialog(frame, type + " updated!");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+            if (row == -1) return;
+            String id = table.getValueAt(row, 0).toString();
+            try (Connection conn = getConnection()) {
+                if (type.equals("Product")) {
+                    String sql = "UPDATE Product SET inventory=?, price=? WHERE product_id=?";
+                    PreparedStatement stmt = conn.prepareStatement(sql);
+                    stmt.setInt(1, Integer.parseInt(table.getValueAt(row, 1).toString().trim()));
+                    stmt.setInt(2, Integer.parseInt(table.getValueAt(row, 2).toString().trim()));
+                    stmt.setInt(3, Integer.parseInt(id));
+                    stmt.executeUpdate();
+                } else if (type.equals("Employees")) {
+                    String sql = "UPDATE Employees SET name=?, phone_number=?, email=?, hire_date=? WHERE employee_id=?";
+                    PreparedStatement stmt = conn.prepareStatement(sql);
+                    stmt.setString(1, table.getValueAt(row, 1).toString().trim());
+                    stmt.setString(2, table.getValueAt(row, 2).toString().trim());
+                    stmt.setString(3, table.getValueAt(row, 3).toString().trim());
+                    stmt.setString(4, table.getValueAt(row, 4).toString().trim());
+                    stmt.setInt(5, Integer.parseInt(id));
+                    stmt.executeUpdate();
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Order updates not supported.");
+                    return;
                 }
+                JOptionPane.showMessageDialog(frame, type + " updated!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
             }
         });
-
-        
-
-
-       
-
 
         frame.add(panel);
         frame.setVisible(true);
