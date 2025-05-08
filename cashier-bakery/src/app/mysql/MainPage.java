@@ -39,7 +39,7 @@ public class MainPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Placeholder for employee logic
-                JOptionPane.showMessageDialog(null, "Employee page is under construction.");
+                EmployeePage.showEmployeePage();
             }
         });
 
@@ -50,5 +50,6 @@ public class MainPage {
                 ManagerPage.showManagerPage();
             }
         });
+        
     }
 }
