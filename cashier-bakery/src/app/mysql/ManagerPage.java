@@ -78,10 +78,7 @@ public class ManagerPage {
 }
 
 
-   
-
-    private static void addProduct() 
-    {
+    private static void addProduct() {
     JFrame frame = new JFrame("Add Product");
     frame.setSize(600, 600);
     frame.setLocationRelativeTo(null); // Center the frame on the screen
@@ -150,6 +147,7 @@ public class ManagerPage {
             JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
         }
     });
+
 }
 
 
@@ -295,35 +293,68 @@ public class ManagerPage {
         });
 
         update.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row == -1) return;
-            String id = table.getValueAt(row, 0).toString();
-            try (Connection conn = getConnection()) {
-                if (type.equals("Product")) {
-                    String sql = "UPDATE Product SET inventory=?, price=? WHERE product_id=?";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setInt(1, Integer.parseInt(table.getValueAt(row, 1).toString().trim()));
-                    stmt.setInt(2, Integer.parseInt(table.getValueAt(row, 2).toString().trim()));
-                    stmt.setInt(3, Integer.parseInt(id));
-                    stmt.executeUpdate();
-                } else if (type.equals("Employees")) {
-                    String sql = "UPDATE Employees SET name=?, phone_number=?, email=?, hire_date=? WHERE employee_id=?";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setString(1, table.getValueAt(row, 1).toString().trim());
-                    stmt.setString(2, table.getValueAt(row, 2).toString().trim());
-                    stmt.setString(3, table.getValueAt(row, 3).toString().trim());
-                    stmt.setString(4, table.getValueAt(row, 4).toString().trim());
-                    stmt.setInt(5, Integer.parseInt(id));
-                    stmt.executeUpdate();
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Order updates not supported.");
-                    return;
-                }
-                JOptionPane.showMessageDialog(frame, type + " updated!");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+    int row = table.getSelectedRow();
+    if (row == -1) {
+        JOptionPane.showMessageDialog(frame, "Please select a row to update.");
+        return;
+    }
+
+    String id = table.getValueAt(row, 0).toString();
+
+    try (Connection conn = getConnection()) {
+        if (type.equals("Product")) {
+            String currentName = table.getValueAt(row, 1).toString();
+            String currentInventory = table.getValueAt(row, 2).toString();
+            String currentPrice = table.getValueAt(row, 3).toString();
+
+            String newName = JOptionPane.showInputDialog(frame, "Enter new product name:", currentName);
+            String newInventory = JOptionPane.showInputDialog(frame, "Enter new inventory:", currentInventory);
+            String newPrice = JOptionPane.showInputDialog(frame, "Enter new price:", currentPrice);
+
+            if (newName != null && newInventory != null && newPrice != null) {
+                String sql = "UPDATE Product SET product_name=?, inventory=?, price=? WHERE product_id=?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, newName.trim());
+                stmt.setInt(2, Integer.parseInt(newInventory.trim()));
+                stmt.setDouble(3, Double.parseDouble(newPrice.trim()));
+                stmt.setInt(4, Integer.parseInt(id));
+                stmt.executeUpdate();
+
+                JOptionPane.showMessageDialog(frame, "Product updated!");
             }
-        });
+
+        } else if (type.equals("Employees")) {
+            String currentName = table.getValueAt(row, 1).toString();
+            String currentPhone = table.getValueAt(row, 2).toString();
+            String currentEmail = table.getValueAt(row, 3).toString();
+            String currentHireDate = table.getValueAt(row, 4).toString();
+
+            String newName = JOptionPane.showInputDialog(frame, "Enter new name:", currentName);
+            String newPhone = JOptionPane.showInputDialog(frame, "Enter new phone number:", currentPhone);
+            String newEmail = JOptionPane.showInputDialog(frame, "Enter new email:", currentEmail);
+            String newHireDate = JOptionPane.showInputDialog(frame, "Enter new hire date (YYYY-MM-DD):", currentHireDate);
+
+            if (newName != null && newPhone != null && newEmail != null && newHireDate != null) {
+                String sql = "UPDATE Employees SET name=?, phone_number=?, email=?, hire_date=? WHERE employee_id=?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, newName.trim());
+                stmt.setString(2, newPhone.trim());
+                stmt.setString(3, newEmail.trim());
+                stmt.setString(4, newHireDate.trim());
+                stmt.setInt(5, Integer.parseInt(id));
+                stmt.executeUpdate();
+
+                JOptionPane.showMessageDialog(frame, "Employee updated!");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(frame, "Order updates not supported.");
+        }
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+    }
+});
+
 
         frame.add(panel);
         frame.setVisible(true);
