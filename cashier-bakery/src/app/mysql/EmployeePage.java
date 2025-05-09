@@ -92,7 +92,7 @@ public class EmployeePage {
     private static void placeOrder() {
         //window layout
         JFrame frame = new JFrame("Place Order");
-        frame.setSize(400, 400);
+        frame.setSize(600, 600);
         JPanel panel = new JPanel(new GridLayout(6, 2));
 
         //order info, also need to fix this

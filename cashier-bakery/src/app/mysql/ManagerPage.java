@@ -15,7 +15,7 @@ public class ManagerPage {
 
     public static void showManagerPage() {
         JFrame frame = new JFrame("Manager Page");
-        frame.setSize(800, 600);
+        frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel(null);
         placeComponents(panel);
@@ -29,124 +29,205 @@ public class ManagerPage {
     }
 
     private static void placeComponents(JPanel panel) {
-        JButton addProductBtn = new JButton("Add Product");
-        addProductBtn.setBounds(50, 30, 130, 30);
-        panel.add(addProductBtn);
+    panel.setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10); // Padding
+    gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JButton addEmployeeBtn = new JButton("Add Employee");
-        addEmployeeBtn.setBounds(200, 30, 130, 30);
-        panel.add(addEmployeeBtn);
+    // Row 0
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    JButton addProductBtn = new JButton("Add Product");
+    panel.add(addProductBtn, gbc);
 
-        JButton viewProductsBtn = new JButton("View Products");
-        viewProductsBtn.setBounds(50, 80, 130, 30);
-        panel.add(viewProductsBtn);
+    gbc.gridx = 1;
+    JButton addEmployeeBtn = new JButton("Add Employee");
+    panel.add(addEmployeeBtn, gbc);
 
-        JButton viewEmployeesBtn = new JButton("View Employees");
-        viewEmployeesBtn.setBounds(200, 80, 130, 30);
-        panel.add(viewEmployeesBtn);
+    // Row 1
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    JButton viewProductsBtn = new JButton("View Products");
+    panel.add(viewProductsBtn, gbc);
 
-        JButton viewOrdersBtn = new JButton("View Orders");
-        viewOrdersBtn.setBounds(200, 130, 130, 30);
-        panel.add(viewOrdersBtn);
+    gbc.gridx = 1;
+    JButton viewEmployeesBtn = new JButton("View Employees");
+    panel.add(viewEmployeesBtn, gbc);
 
-        JButton backButton = new JButton("Back to Main Page");
-        backButton.setBounds(50, 130, 130, 30);
-        panel.add(backButton);
+    // Row 2
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    JButton backButton = new JButton("Back to Main Page");
+    panel.add(backButton, gbc);
 
-        addProductBtn.addActionListener(e -> addProduct());
-        addEmployeeBtn.addActionListener(e -> addEmployee());
-        viewProductsBtn.addActionListener(e -> openTable("Product"));
-        viewEmployeesBtn.addActionListener(e -> openTable("Employees"));
-        viewOrdersBtn.addActionListener(e -> openTable("Orders"));
+    gbc.gridx = 1;
+    JButton viewOrdersBtn = new JButton("View Orders");
+    panel.add(viewOrdersBtn, gbc);
 
-        backButton.addActionListener(e -> {
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-            topFrame.dispose();
-            MainPage.main(null); // Assuming MainPage exists
-        });
-    }
+    // Action listeners
+    addProductBtn.addActionListener(e -> addProduct());
+    addEmployeeBtn.addActionListener(e -> addEmployee());
+    viewProductsBtn.addActionListener(e -> openTable("Product"));
+    viewEmployeesBtn.addActionListener(e -> openTable("Employees"));
+    viewOrdersBtn.addActionListener(e -> openTable("Orders"));
+    backButton.addActionListener(e -> {
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+        topFrame.dispose();
+        MainPage.main(null);
+    });
+}
 
-    private static void addProduct() {
-        JFrame frame = new JFrame("Add Product");
-        frame.setSize(300, 250);
-        JPanel panel = new JPanel(new GridLayout(4, 2));
 
-        JTextField idField = new JTextField();
-        JTextField inventoryField = new JTextField();
-        JTextField priceField = new JTextField();
-        JButton save = new JButton("Save");
+   
 
-        panel.add(new JLabel("Product ID:"));
-        panel.add(idField);
-        panel.add(new JLabel("Inventory:"));
-        panel.add(inventoryField);
-        panel.add(new JLabel("Price:"));
-        panel.add(priceField);
-        panel.add(save);
+    private static void addProduct() 
+    {
+    JFrame frame = new JFrame("Add Product");
+    frame.setSize(600, 600);
+    frame.setLocationRelativeTo(null); // Center the frame on the screen
 
-        frame.add(panel);
-        frame.setVisible(true);
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10); // Padding around components
+    gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        save.addActionListener(e -> {
-            try (Connection conn = getConnection()) {
-                String sql = "INSERT INTO Product (product_id, inventory, price) VALUES (?, ?, ?)";
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setInt(1, Integer.parseInt(idField.getText().trim()));
-                stmt.setInt(2, Integer.parseInt(inventoryField.getText().trim()));
-                stmt.setInt(3, Integer.parseInt(priceField.getText().trim()));
-                stmt.executeUpdate();
-                JOptionPane.showMessageDialog(frame, "Product added!");
-                frame.dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
-            }
-        });
-    }
+    JTextField idField = new JTextField(15);
+    JTextField nameField = new JTextField(15);
+    JTextField inventoryField = new JTextField(15);
+    JTextField priceField = new JTextField(15);
+    JButton save = new JButton("Save");
+
+    // Row 0: Product ID
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    panel.add(new JLabel("Product ID:"), gbc);
+    gbc.gridx = 1;
+    panel.add(idField, gbc);
+
+    // Row 1: Product Name
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    panel.add(new JLabel("Product Name:"), gbc);
+    gbc.gridx = 1;
+    panel.add(nameField, gbc);
+
+    // Row 2: Inventory
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    panel.add(new JLabel("Inventory:"), gbc);
+    gbc.gridx = 1;
+    panel.add(inventoryField, gbc);
+
+    // Row 3: Price
+    gbc.gridx = 0;
+    gbc.gridy = 3;
+    panel.add(new JLabel("Price:"), gbc);
+    gbc.gridx = 1;
+    panel.add(priceField, gbc);
+
+    // Row 4: Save Button
+    gbc.gridx = 0;
+    gbc.gridy = 4;
+    gbc.gridwidth = 2;
+    gbc.anchor = GridBagConstraints.CENTER;
+    panel.add(save, gbc);
+
+    frame.add(panel);
+    frame.setVisible(true);
+
+    save.addActionListener(e -> {
+        try (Connection conn = getConnection()) {
+            String sql = "INSERT INTO Product (product_id, product_name, inventory, price) VALUES (?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, Integer.parseInt(idField.getText().trim()));
+            stmt.setString(2, nameField.getText().trim());
+            stmt.setInt(3, Integer.parseInt(inventoryField.getText().trim()));
+            stmt.setDouble(4, Double.parseDouble(priceField.getText().trim()));
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(frame, "Product added!");
+            frame.dispose();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+        }
+    });
+}
+
 
     private static void addEmployee() {
-        JFrame frame = new JFrame("Add Employee");
-        frame.setSize(300, 300);
-        JPanel panel = new JPanel(new GridLayout(6, 2));
+    JFrame frame = new JFrame("Add Employee");
+    frame.setSize(600, 600);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setLocationRelativeTo(null); // Center on screen
 
-        JTextField idField = new JTextField();
-        JTextField nameField = new JTextField();
-        JTextField phoneField = new JTextField();
-        JTextField emailField = new JTextField();
-        JTextField hireDateField = new JTextField();
-        JButton save = new JButton("Save");
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10); // Padding
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.anchor = GridBagConstraints.CENTER;
 
-        panel.add(new JLabel("Employee ID:"));
-        panel.add(idField);
-        panel.add(new JLabel("Name:"));
-        panel.add(nameField);
-        panel.add(new JLabel("Phone Number:"));
-        panel.add(phoneField);
-        panel.add(new JLabel("Email:"));
-        panel.add(emailField);
-        panel.add(new JLabel("Hire Date (YYYY-MM-DD):"));
-        panel.add(hireDateField);
-        panel.add(save);
+    JTextField idField = new JTextField(15);
+    JTextField nameField = new JTextField(15);
+    JTextField phoneField = new JTextField(15);
+    JTextField emailField = new JTextField(15);
+    JTextField hireDateField = new JTextField(15);
 
-        frame.add(panel);
-        frame.setVisible(true);
+    JButton save = new JButton("Save");
+    save.setPreferredSize(new Dimension(20, 30));
 
-        save.addActionListener(e -> {
-            try (Connection conn = getConnection()) {
-                String sql = "INSERT INTO Employees (employee_id, name, phone_number, email, hire_date) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setInt(1, Integer.parseInt(idField.getText().trim()));
-                stmt.setString(2, nameField.getText().trim());
-                stmt.setString(3, phoneField.getText().trim());
-                stmt.setString(4, emailField.getText().trim());
-                stmt.setString(5, hireDateField.getText().trim());
-                stmt.executeUpdate();
-                JOptionPane.showMessageDialog(frame, "Employee added!");
-                frame.dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
-            }
-        });
-    }
+
+    int y = 0;
+
+    gbc.gridx = 0; gbc.gridy = y;
+    panel.add(new JLabel("Employee ID:"), gbc);
+    gbc.gridx = 1;
+    panel.add(idField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = ++y;
+    panel.add(new JLabel("Name:"), gbc);
+    gbc.gridx = 1;
+    panel.add(nameField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = ++y;
+    panel.add(new JLabel("Phone Number:"), gbc);
+    gbc.gridx = 1;
+    panel.add(phoneField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = ++y;
+    panel.add(new JLabel("Email:"), gbc);
+    gbc.gridx = 1;
+    panel.add(emailField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = ++y;
+    panel.add(new JLabel("Hire Date (YYYY-MM-DD):"), gbc);
+    gbc.gridx = 1;
+    panel.add(hireDateField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = ++y;
+    gbc.gridwidth = 2;
+    gbc.anchor = GridBagConstraints.CENTER;
+    panel.add(save, gbc);
+
+    frame.add(panel);
+    frame.setVisible(true);
+
+    save.addActionListener(e -> {
+        try (Connection conn = getConnection()) {
+            String sql = "INSERT INTO Employees (employee_id, name, phone_number, email, hire_date) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, Integer.parseInt(idField.getText().trim()));
+            stmt.setString(2, nameField.getText().trim());
+            stmt.setString(3, phoneField.getText().trim());
+            stmt.setString(4, emailField.getText().trim());
+            stmt.setString(5, hireDateField.getText().trim());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(frame, "Employee added!");
+            frame.dispose();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+        }
+    });
+}
+
 
     private static void openTable(String type) {
         JFrame frame = new JFrame("View " + type);

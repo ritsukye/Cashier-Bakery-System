@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,10 +8,11 @@ public class MainPage {
     public static void main(String[] args) {
         // Create the main JFrame
         JFrame frame = new JFrame("Bakery System - Main Page");
-        frame.setSize(400, 200);
+        frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null); // Center on screen
 
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new GridBagLayout());
         frame.add(panel);
         placeComponents(panel);
 
@@ -18,27 +20,33 @@ public class MainPage {
     }
 
     private static void placeComponents(JPanel panel) {
-        panel.setLayout(null);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(15, 15, 15, 15); // Padding
 
+        // Welcome label
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
         JLabel welcomeLabel = new JLabel("Welcome to Bakery System");
-        welcomeLabel.setBounds(100, 20, 250, 25);
-        panel.add(welcomeLabel);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        panel.add(welcomeLabel, gbc);
 
-        // Employee Button
-        JButton employeeButton = new JButton("Employee");
-        employeeButton.setBounds(50, 80, 120, 30);
-        panel.add(employeeButton);
+        // Employee button
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        JButton employeeButton = new JButton("Cashier");
+        panel.add(employeeButton, gbc);
 
-        // Manager Button
+        // Manager button
+        gbc.gridx = 1;
         JButton managerButton = new JButton("Manager");
-        managerButton.setBounds(200, 80, 120, 30);
-        panel.add(managerButton);
+        panel.add(managerButton, gbc);
 
         // Action listeners
         employeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Placeholder for employee logic
                 EmployeePage.showEmployeePage();
             }
         });
@@ -46,10 +54,8 @@ public class MainPage {
         managerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Call the showManagerPage method from ManagerPage
                 ManagerPage.showManagerPage();
             }
         });
-        
     }
 }
