@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class MainPage {
 
@@ -73,20 +77,61 @@ public class MainPage {
 
         frame.add(centerPanel, BorderLayout.CENTER);
 
+        // UPDATED Cashier Button logic
         employeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EmployeePage.showEmployeePage();
+                String inputId = JOptionPane.showInputDialog(null, "Enter your Employee ID:");
+                if (inputId != null && !inputId.trim().isEmpty()) {
+                    try {
+                        int employeeId = Integer.parseInt(inputId.trim());
+                        String employeeName = getEmployeeNameById(employeeId);
+                        if (employeeName != null) {
+                            JOptionPane.showMessageDialog(null, "Welcome, " + employeeName + "!");
+                            EmployeePage.showEmployeePage(employeeName);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Employee ID not found.");
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Invalid ID format.");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage());
+                    }
+                }
             }
         });
 
         managerButton.addActionListener(new ActionListener() {
-            @Override
+        @Override
             public void actionPerformed(ActionEvent e) {
-                ManagerPage.showManagerPage();
+                String password = JOptionPane.showInputDialog(null, "Enter Manager Password:");
+                if ("301".equals(password)) {
+                    ManagerPage.showManagerPage();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Incorrect password!", "Access Denied", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
+
         frame.setVisible(true);
+    }
+
+    // Helper method to get employee name by ID
+    private static String getEmployeeNameById(int id) throws Exception {
+        String url = "jdbc:mysql://localhost:3306/Bakery";
+        String user = "root";
+        String password = "bakery2025";
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT name FROM Employees WHERE employee_id = ?");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("name");
+            }
+        }
+        return null;
     }
 }

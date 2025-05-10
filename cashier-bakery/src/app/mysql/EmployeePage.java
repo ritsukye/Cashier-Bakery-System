@@ -31,19 +31,24 @@ public class EmployeePage {
 
     static List<OrderItem> cart = new ArrayList<>();
 
-    public static void main(String[] args) {
-        showEmployeePage();
-    }
+   
 
-    public static void showEmployeePage() {
+    public static void showEmployeePage(String employeeName) {
         JFrame frame = new JFrame("Employee Page");
         frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel(null);
         placeComponents(panel);
+
+        JLabel welcomeLabel = new JLabel("Welcome, " + employeeName + "!");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        welcomeLabel.setBounds(180, 50, 300, 30);
+        panel.add(welcomeLabel);
+
         frame.add(panel);
         frame.setVisible(true);
     }
+
 
     private static void placeComponents(JPanel panel) {
         JButton placeOrderBtn = new JButton("Place Order");
