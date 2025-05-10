@@ -1,20 +1,27 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+Project Overview:
+Our project is a bakery management system. Bakery Managers can add/view employee, order, and product information. It also allows employees to place/view orders. The purpose of our project is to be able to do all these tasks in one place, simplifying bakery management.
 
-First, run the development server:
+To set up and run the project:
+// MySQL Setup
+1. Open MySQL Workbench (Download the latest version if you haven't already downloaded it)
+2. Save your password and create a local MySQL instance for MySQL Database
+3. Create a new MySQL table in that instance called Bakery
+4. Copy over the MySQL script provided
+5. Download MySQL Extension in VSC Extension
+6. Add the matching details to connect your MySQL to VSC
+     a. Importantly, add your MySQL username and password to the connection ("root" and "bakery2025" as username and password)
+// VSC Set Up
+1. Pull from GitHub and open in Visual Studio Code
+2. In Visual Studio Code's terminal, cd to cashier-bakery/src/app/mysql
+3. Enter the commands:
+    javac MainPage.java
+    java -cp ".:mysql-connector-j-9.3.0.jar" MainPage
+4. Run the main page of the bakery system. You won't need to extract or insert a jar connector since it's already included in the project files.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Dependencies and Required Software:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
