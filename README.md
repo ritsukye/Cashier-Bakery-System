@@ -20,3 +20,4 @@ To set up and run the project:
 5. Run the main page of the bakery system. You won't need to extract or insert a jar connector since it's already included in the project files.
 
 Dependencies and Required Software:
+We pulled from MySQL/Java libraries and only used Java and MySQL.
