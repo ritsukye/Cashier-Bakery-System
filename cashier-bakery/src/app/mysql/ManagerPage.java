@@ -15,13 +15,38 @@ public class ManagerPage {
 
     public static void showManagerPage() {
         JFrame frame = new JFrame("Manager Page");
-        frame.setSize(600, 600);
+        frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel panel = new JPanel(null);
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout());
+    
+        JPanel navbar = new JPanel(new BorderLayout());
+        navbar.setBackground(new Color(255, 228, 196));
+    
+        ImageIcon logoIcon = new ImageIcon(MainPage.class.getResource("/resources/logo.png"));
+        if (logoIcon.getIconWidth() != -1) {
+            Image logoImg = logoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            JLabel logoLabel = new JLabel(new ImageIcon(logoImg));
+            logoLabel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 5));
+            navbar.add(logoLabel, BorderLayout.WEST);
+        } else {
+            navbar.add(new JLabel("Logo"), BorderLayout.WEST);
+        }
+    
+        JLabel titleLabel = new JLabel("Manager Dashboard");
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        navbar.add(titleLabel, BorderLayout.CENTER);
+    
+        frame.add(navbar, BorderLayout.NORTH);
+    
+        JPanel panel = new JPanel(new GridBagLayout());
         placeComponents(panel);
-        frame.add(panel);
+        frame.add(panel, BorderLayout.CENTER);
+    
         frame.setVisible(true);
     }
+    
 
     private static Connection getConnection() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");

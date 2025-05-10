@@ -6,44 +6,73 @@ import java.awt.event.ActionListener;
 public class MainPage {
 
     public static void main(String[] args) {
-        // Create the main JFrame
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+
         JFrame frame = new JFrame("Bakery System - Main Page");
-        frame.setSize(600, 600);
+        frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null); // Center on screen
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout());
 
-        JPanel panel = new JPanel(new GridBagLayout());
-        frame.add(panel);
-        placeComponents(panel);
+        //this navbar is a wip, once we add order pages and view cart we can add those
+        JPanel navbar = new JPanel(new BorderLayout());
+        navbar.setBackground(new Color(255, 228, 196));
 
-        frame.setVisible(true);
-    }
+        ImageIcon logoIcon = new ImageIcon(MainPage.class.getResource("/resources/logo.png"));
+        if (logoIcon.getIconWidth() != -1) {
+            Image logoImg = logoIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            JLabel logoLabel = new JLabel(new ImageIcon(logoImg));
+            logoLabel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 5));
+            navbar.add(logoLabel, BorderLayout.WEST);
+        } else {
+            System.out.println("Logo image not found :(");
+            navbar.add(new JLabel("temp logo"), BorderLayout.WEST);
+        }
 
-    private static void placeComponents(JPanel panel) {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(15, 15, 15, 15); // Padding
+        System.out.println("Logo path: " + MainPage.class.getResource("/resources/logo.png"));
 
-        // Welcome label
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JLabel welcomeLabel = new JLabel("Welcome to Bakery System");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        panel.add(welcomeLabel, gbc);
+        JLabel titleLabel = new JLabel("Cookie Corner");
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        navbar.add(titleLabel, BorderLayout.CENTER);
 
-        // Employee button
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
+        //update this section later for orders page
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         JButton employeeButton = new JButton("Cashier");
-        panel.add(employeeButton, gbc);
-
-        // Manager button
-        gbc.gridx = 1;
         JButton managerButton = new JButton("Manager");
-        panel.add(managerButton, gbc);
+        buttonPanel.add(employeeButton);
+        buttonPanel.add(managerButton);
+        navbar.add(buttonPanel, BorderLayout.EAST);
 
-        // Action listeners
+        frame.add(navbar, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
+
+        JLabel welcomeLabel = new JLabel("Welcome to the Bakery System!");
+        welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(welcomeLabel);
+
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        ImageIcon homeIcon = new ImageIcon(MainPage.class.getResource("/resources/home.png"));
+        if (homeIcon.getIconWidth() != -1) {
+            Image homeImage = homeIcon.getImage().getScaledInstance(600, 300, Image.SCALE_SMOOTH);
+            JLabel homeLabel = new JLabel(new ImageIcon(homeImage));
+            homeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            centerPanel.add(homeLabel);
+        } else {
+            System.out.println("Home image not found.");
+            JLabel errorLabel = new JLabel("Image not found.");
+            errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            centerPanel.add(errorLabel);
+        }
+
+        frame.add(centerPanel, BorderLayout.CENTER);
+
         employeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,5 +86,7 @@ public class MainPage {
                 ManagerPage.showManagerPage();
             }
         });
+
+        frame.setVisible(true);
     }
 }
