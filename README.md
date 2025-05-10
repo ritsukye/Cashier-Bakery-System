@@ -17,9 +17,11 @@ To set up and run the project:
 2. We abandoned main because we initially started with React and eventually left it for Java Swing
 3. In Visual Studio Code's terminal, cd to cashier-bakery/src/app/mysql
 4. Enter the commands:
+
     javac MainPage.java
+
     java -cp ".:mysql-connector-j-9.3.0.jar" MainPage
-5. Run the main page of the bakery system. You won't need to extract or insert a jar connector since it's already included in the project files.
+6. Run the main page of the bakery system. You won't need to extract or insert a jar connector since it's already included in the project files.
 
 Dependencies and Required Software:
 We pulled from MySQL/Java libraries and only used Java and MySQL.
